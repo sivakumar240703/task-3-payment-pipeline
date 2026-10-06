@@ -4,6 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "localhost:5000/mycompany/payment"
         IMAGE_TAG = "${BUILD_NUMBER}"
+        BRANCH_NAME = "main"
     }
 
     stages {
@@ -41,7 +42,6 @@ pipeline {
                 """
 
                 bat """
-                    timeout /t 5 /nobreak
                     echo Application Version: %IMAGE_TAG%
                     echo Git Commit: %GIT_COMMIT%
                     echo Docker Image: %IMAGE_NAME%:%IMAGE_TAG%
