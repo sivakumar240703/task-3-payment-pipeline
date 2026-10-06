@@ -36,8 +36,12 @@ pipeline {
         stage('Deploy') {
             steps {
                 bat """
-                    docker stop payment || exit /b 0
-                    docker rm payment || exit /b 0
+                    docker stop payment
+                    if %ERRORLEVEL% NEQ 0 echo No existing payment container found
+
+                    docker rm payment
+                    if %ERRORLEVEL% NEQ 0 echo No existing payment container to remove
+
                     docker run -d --name payment -p 8085:8080 -e APP_VERSION=%IMAGE_TAG% -e BUILD_NUMBER=%BUILD_NUMBER% -e GIT_COMMIT=%GIT_COMMIT% -e BRANCH_NAME=%BRANCH_NAME% -e DOCKER_IMAGE=%IMAGE_NAME%:%IMAGE_TAG% %IMAGE_NAME%:%IMAGE_TAG%
                 """
 
